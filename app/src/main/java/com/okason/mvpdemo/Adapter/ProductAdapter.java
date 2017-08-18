@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.okason.mvpdemo.Model.Cart;
+import com.okason.mvpdemo.Activity.ProductListener;
+import com.okason.mvpdemo.Model.CartItems;
 import com.okason.mvpdemo.Model.Product;
 import com.okason.mvpdemo.R;
 import com.okason.mvpdemo.Utils.Utils;
@@ -18,6 +20,9 @@ import com.orm.util.NamingHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.okason.mvpdemo.Activity.MainActivity.txtGrandTotal;
+
+
 /*** Created by nikita on 17/8/17.
  */
 
@@ -25,6 +30,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
     private Context mContext;
     private ArrayList<Product> productList;
     private Utils utils;
+    private ProductListener listener;
 
     public ProductAdapter(Context context, ArrayList<Product> productArrayList) {
         this.mContext = context;
@@ -45,32 +51,35 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         holder.txtProductName.setText(productDetails.getProductName());
         holder.txtProductPrice.setText(String.valueOf(productDetails.getSalePrice()));
         holder.txtProductDescription.setText(productDetails.getDescription());
+        txtGrandTotal.setVisibility(View.GONE);
+        holder.txtSubTotal.setVisibility(View.INVISIBLE);
         holder.imgCancel.setVisibility(View.GONE);
+        holder.layoutQuantity.setVisibility(View.GONE);
         holder.imgAdd.setVisibility(View.VISIBLE);
+
+        // TODO: 18/8/17 add the items in cartt 
         holder.imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listener = new ProductListener();
+                listener.onAddToCartButtonClicked(productDetails);
                 Toast.makeText(mContext, "Add to cart", Toast.LENGTH_SHORT).show();
-
-/*                Utils.WriteSharePrefrence(mContext,
-
-                        Constants.PRODUCT_ID, String.valueOf(productDetails.getId()));
-*/
 
                 List<Product> productListData = Product.find(Product.class, NamingHelper.toSQLNameDefault("id")
                         + " = ? ", String.valueOf(productDetails.getId()));
 
                 for (Product product : productListData) {
-                    Cart cart = new Cart();
+                    CartItems cart = new CartItems();
                     cart.setId(product.getId());
                     cart.setDescription(product.getDescription());
                     cart.setSalePrice(product.getSalePrice());
                     cart.setProductName(product.getProductName());
                     cart.save();
                 }
-
-
-                notifyDataSetChanged();
+//                productList.remove(position);
+//                notifyDataSetChanged();
+//                notifyItemRemoved(position);
+//                notifyItemRangeChanged(position, productList.size());
             }
         });
     }
@@ -86,11 +95,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView txtProductName, txtProductPrice, txtProductDescription;
+        TextView txtProductName, txtProductPrice, txtProductDescription, txtSubTotal;
         ImageView imgCancel, imgAdd;
+        LinearLayout layoutQuantity;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            txtSubTotal = (TextView) itemView.findViewById(R.id.fragment_product_list_txtsubtotal);
+            layoutQuantity = (LinearLayout) itemView.findViewById(R.id.fragment_product_list_layoutquantity);
             imgCancel = (ImageView) itemView.findViewById(R.id.fragment_product_list_imgcancel);
             imgAdd = (ImageView) itemView.findViewById(R.id.fragment_product_list_imgadd);
             txtProductName = (TextView) itemView.findViewById(R.id.fragment_product_list_txtproductname);

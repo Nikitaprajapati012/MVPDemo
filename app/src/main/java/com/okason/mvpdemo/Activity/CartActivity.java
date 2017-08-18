@@ -5,36 +5,33 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.okason.mvpdemo.Adapter.CartAdapter;
-import com.okason.mvpdemo.Model.Cart;
+import com.okason.mvpdemo.Model.CartItems;
 import com.okason.mvpdemo.Model.Product;
 import com.okason.mvpdemo.R;
-import com.okason.mvpdemo.Utils.Constants;
 import com.okason.mvpdemo.Utils.Utils;
 
 import java.util.List;
-
-import butterknife.ButterKnife;
 
 public class CartActivity extends AppCompatActivity implements View.OnClickListener {
     RecyclerView recyclerViewProduct;
     ProductListener listener;
     Product productDetails;
-    List<Cart> productArrayList;
+    List<CartItems> productArrayList;
     Utils utils;
     Toolbar toolbar;
     ImageView imgBack;
+    public static TextView txtGrandTotal;
     FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         findById();
         init();
         setDataInList();
@@ -44,8 +41,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                listener.onAddToCartButtonClicked(productDetails);
             }
         });
     }
@@ -57,6 +52,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         recyclerViewProduct = (RecyclerView) findViewById(R.id.activity_main_listProduct);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         imgBack = (ImageView) findViewById(R.id.activity_main_imgback);
+        txtGrandTotal = (TextView) findViewById(R.id.activity_main_txtgrandtotal);
         imgBack.setVisibility(View.VISIBLE);
     }
 
@@ -65,14 +61,13 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setDataInList() {
-        productArrayList = Cart.listAll(Cart.class);
+        productArrayList = CartItems.listAll(CartItems.class);
         CartAdapter adapter = new CartAdapter(this, productArrayList);
         utils.replaceFragment(recyclerViewProduct, adapter);
     }
 
     private void click() {
         imgBack.setOnClickListener(this);
-
     }
 
 

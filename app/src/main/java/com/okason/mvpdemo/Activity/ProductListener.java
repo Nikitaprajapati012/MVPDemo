@@ -1,6 +1,6 @@
 package com.okason.mvpdemo.Activity;
 
-import com.okason.mvpdemo.Model.LineItem;
+import com.okason.mvpdemo.Model.CartItems;
 import com.okason.mvpdemo.Model.Product;
 
 import javax.inject.Inject;
@@ -24,14 +24,14 @@ public class ProductListener {
     }
 
     //Here is an example of how we are using the injected shopping cart
-    public void onItemQuantityChanged(LineItem item, int qty) {
+    public void onItemQuantityChanged(CartItems item, int qty) {
         mCart.updateItemQty(item, qty);
     }
 
     //Another example of using the shopping cart
     public void onAddToCartButtonClicked(Product product) {
         //perform add to checkout button here
-        LineItem item = new LineItem(product, 1);
+        CartItems item = new CartItems(product, 1);
         mCart.addItemToCart(item);
     }
 
@@ -39,7 +39,7 @@ public class ProductListener {
         mCart.clearShoppingCart();
     }
 
-    public void onDeleteItemButtonClicked(LineItem item) {
+    public void onDeleteItemButtonClicked(CartItems item) {
         mCart.removeItemFromCart(item);
     }
 }

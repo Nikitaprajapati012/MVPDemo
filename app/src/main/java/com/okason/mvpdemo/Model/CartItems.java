@@ -6,7 +6,7 @@ import com.orm.SugarRecord;
 /*** Created by nikita on 17/8/17.
  */
 
-public class Cart extends SugarRecord {
+public class CartItems extends SugarRecord {
     @SerializedName("id")
     private Long id;
     @SerializedName("productName")
@@ -15,7 +15,32 @@ public class Cart extends SugarRecord {
     private String description;
     @SerializedName("salePrice")
     private double salePrice;
+    @SerializedName("quantity")
+    private int quantity;
 
+    public CartItems(Product product, int quantity) {
+        this.quantity = quantity;
+    }
+
+    public CartItems() {
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getSumPrice() {
+        return getSalePrice() * quantity;
+    }
     @Override
     public Long getId() {
         return id;

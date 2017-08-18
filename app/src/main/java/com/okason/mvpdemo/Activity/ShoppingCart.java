@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.okason.mvpdemo.Model.LineItem;
+import com.okason.mvpdemo.Model.CartItems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 public class ShoppingCart {
     private final SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private List<LineItem> shoppingCart;
+    private List<CartItems> shoppingCart;
     private static final String OPEN_CART_EXITS = "open_cart_exists";
     private static final String SERIALIZED_CART_ITEMS = "serialized_cart_items";
     private static final String SERIALIZED_CUSTOMER = "serialized_customer";
@@ -35,18 +35,18 @@ public class ShoppingCart {
             String serializedCartItems = sharedPreferences.getString(SERIALIZED_CART_ITEMS, "");
             String serializedCustomer = sharedPreferences.getString(SERIALIZED_CUSTOMER, "");
             if (!serializedCartItems.equals("")) {
-                shoppingCart = gson.<ArrayList<LineItem>>fromJson(serializedCartItems,
-                        new TypeToken<ArrayList<LineItem>>() {
+                shoppingCart = gson.<ArrayList<CartItems>>fromJson(serializedCartItems,
+                        new TypeToken<ArrayList<CartItems>>() {
                         }.getType());
             }
         }
         updateApp();
     }
 
-    public void addItemToCart(LineItem item) {
+    public void addItemToCart(CartItems item) {
         if (shoppingCart.contains(item)) {
             int currentPosition = shoppingCart.indexOf(item);
-            LineItem itemAlreadyInCart = shoppingCart.get(currentPosition);
+            CartItems itemAlreadyInCart = shoppingCart.get(currentPosition);
             itemAlreadyInCart.setQuantity(itemAlreadyInCart.getQuantity() + item.getQuantity());
             shoppingCart.set(currentPosition, itemAlreadyInCart);
         } else {
@@ -62,7 +62,7 @@ public class ShoppingCart {
         updateApp();
     }
 
-    public void removeItemFromCart(LineItem item) {
+    public void removeItemFromCart(CartItems item) {
         shoppingCart.remove(item);
         updateApp();
     }
@@ -77,7 +77,7 @@ public class ShoppingCart {
         //perform any action that is needed to update the app
     }
 
-    public List<LineItem> getShoppingCart() {
+    public List<CartItems> getShoppingCart() {
         return shoppingCart;
     }
 
@@ -90,21 +90,19 @@ public class ShoppingCart {
         }
     }
 
-    public void updateItemQty(LineItem item, int qty) {
+    public void updateItemQty(CartItems item, int qty) {
 
         boolean itemAlreadyInCart = shoppingCart.contains(item);
 
         if (itemAlreadyInCart) {
             int position = shoppingCart.indexOf(item);
-            LineItem itemInCart = shoppingCart.get(position);
+            CartItems itemInCart = shoppingCart.get(position);
             itemInCart.setQuantity(qty);
             shoppingCart.set(position, itemInCart);
         } else {
             item.setQuantity(qty);
             shoppingCart.add(item);
         }
-
         updateApp();
-
     }
 }

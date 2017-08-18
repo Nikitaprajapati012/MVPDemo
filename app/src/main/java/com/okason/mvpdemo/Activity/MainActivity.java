@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.okason.mvpdemo.Adapter.ProductAdapter;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Utils utils;
     Toolbar toolbar;
     FloatingActionButton fab;
+    public static TextView txtGrandTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab = (FloatingActionButton) findViewById(R.id.fab);
         imgBack = (ImageView) findViewById(R.id.activity_main_imgback);
         imgBack.setVisibility(View.GONE);
+        txtGrandTotal = (TextView) findViewById(R.id.activity_main_txtgrandtotal);
     }
 
     private void init() {
